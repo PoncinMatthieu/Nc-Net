@@ -18,6 +18,9 @@ Mongo::~Mongo()
 
 bool    Mongo::Connect(const std::string &ip, const std::string &dbName)
 {
+    if (_db != NULL)
+        throw Utils::Exception("Mongo::Connect", "The database is already connected.");
+
     _ip = ip;
     _dbName = dbName;
     try
@@ -27,7 +30,7 @@ bool    Mongo::Connect(const std::string &ip, const std::string &dbName)
     }
     catch(const mongo::DBException &e)
     {
-        LOG_ERROR << "Failed to connect to the database " << e.what() << std::endl;
+        LOG_ERROR << "Mongo::Connect: Failed to connect to the database: " << e.what() << std::endl;
         return false;
     }
     return true;
@@ -52,7 +55,7 @@ void    Mongo::Insert(const string &collection, const BSONObj &obj)
 void    Mongo::Update(const string &collection, const mongo::Query &query, const BSONObj &obj, bool upsert, bool multi)
 {
     if (_db == NULL)
-        throw Utils::Exception("Mongo::Query", "The db is not connected!");
+        throw Utils::Exception("Mongo::Update", "The db is not connected!");
 
     _db->update(_dbName + "." + collection, query, obj, upsert, multi);
     CheckErrors();
@@ -63,5 +66,5 @@ void    Mongo::CheckErrors()
     // check for errors
     string err = _db->getLastError();
     if (!err.empty())
-        throw Utils::Exception("Mongo::InsertNewParty", err);
+        throw Utils::Exception("Mongo::CheckErrors", err);
 }

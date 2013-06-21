@@ -17,6 +17,10 @@ if(NOT DEFINED NC_NET_BUILD_TLS_BOTAN)
   set(NC_NET_BUILD_TLS_BOTAN true CACHE BOOL "If true, build the Tls classes using Botan lib.")
 endif()
 
+if(NOT DEFINED NC_NET_BUILD_KYOTOTYCOON)
+  set(NC_NET_BUILD_KYOTOTYCOON true CACHE BOOL "If true, build the KyotoTycoon abstract sources.")
+endif()
+
 # define _DEBUG
 if(UNIX)
   if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
@@ -47,6 +51,10 @@ if (NOT NC_NET_BUILD_TLS_BOTAN)
   list(REMOVE_ITEM Nc-Net-sources ${Nc-Net-TLS-Botan})
 endif()
 
+if (NOT NC_NET_BUILD_KYOTOTYCOON)
+  file(GLOB Nc-Net-KyotoTycoon ./KyotoTycoon.cpp ./KyotoTycoon.h)
+  list(REMOVE_ITEM Nc-Net-sources ${Nc-Net-KyotoTycoon})
+endif()
 
 add_library(Nc-Net SHARED ${Nc-Net-sources})
 add_dependencies(Nc-Net Nc-Core)
@@ -56,6 +64,9 @@ if (NC_NET_BUILD_MONGO)
 endif()
 if (NC_NET_BUILD_TLS_BOTAN)
   target_link_libraries(Nc-Net botan-1.10)
+endif()
+if (NC_NET_BUILD_KYOTOTYCOON)
+  target_link_libraries(Nc-Net kyototycoon)
 endif()
 
 # set the export defines to export the symbole in the dll
