@@ -27,9 +27,11 @@ namespace Nc
                 virtual void            ToString(std::ostream &oss) const       {}
 
                 /** \return the tcp handler. */
-                TcpConnection   *GetTcpConnection()         {return _tcpConnection;}
+                TcpConnection           *GetTcpConnection()         {return _tcpConnection;}
+                /** \return the tcp handler. */
+                TcpConnection           *GetTcpConnection() const   {return _tcpConnection;}
                 /** Set the connection used by the callback. */
-                virtual void    SetupConnection(TcpConnection *tcpConnection);
+                virtual void            SetupConnection(TcpConnection *tcpConnection);
 
                 /** Call the given callback, can be redefined, to for exemple manage a ping method and check if clients are responding. */
                 virtual void    CallCallback(Method callback, const Packet &p);
